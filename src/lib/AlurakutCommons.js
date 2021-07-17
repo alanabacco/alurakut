@@ -39,7 +39,7 @@ export function AlurakutMenu({ githubUser }) {
             Sair
           </a>
           <div>
-            <input placeholder="Pesquisar no Orkut" />
+            <input placeholder="Pesquisar no Orkut" aria-label="Pesquisar no Orkut" />
           </div>
         </nav>
 
@@ -167,7 +167,7 @@ AlurakutMenu.Logo = styled.img`
   height: 34px;
 `;
 
-function AlurakutMenuProfileSidebar({ githubUser }) {
+function AlurakutMenuProfileSidebar( { githubUser }) {
   return (
     <div className="alurakutMenuProfileSidebar">
       <div>
