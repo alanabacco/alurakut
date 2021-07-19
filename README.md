@@ -4,7 +4,7 @@
 
 O projeto Alurakut foi desenvolvido durante a [Imersão React 03](https://alura.com.br/imersao-react) da [Alura](https://www.alura.com.br/), onde o objetivo era recriar um perfil do Orkut.
 
-[Site do Projeto](https://)
+[Site do Projeto](https://alurakut-alanabacco.vercel.app/)
 
 ---
 

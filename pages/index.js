@@ -1,4 +1,8 @@
 import React from 'react';
+
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
+
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/Box'
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
@@ -43,8 +47,8 @@ function ProfileRelationsBox(props) {
   )
 }
 
-export default function Home() {
-  const usuarioAleatorio = 'alanabacco';
+export default function Home(props) {
+  const usuarioAleatorio = props.githubUser;
   const [comunidades, setComunidades] = React.useState([{
     id: '170720211903',
     title: 'Alurakut',
@@ -64,13 +68,21 @@ export default function Home() {
 
   // Pegar os dados da API do github
   React.useEffect(() => {
-    fetch('https://api.github.com/users/alanabacco/followers')
+    // get
+    fetch(`https://api.github.com/users/${githubUser}/followers`)
     .then((respostaDoServidor) => {
       return respostaDoServidor.json();
     })
     .then((respostaCompleta) => {
       setSeguidores(respostaCompleta);
     })
+
+    // Pegar dados do banco de dados...
+    // fetch('', {
+    //   method: 'POST',
+    // })
+
+
   }, []) //um array vazio para executar apenas 1 vez, ou passar um parâmetro para executar quando houver modificação nesse parâmetro
 
   return (
@@ -173,4 +185,33 @@ export default function Home() {
       </MainGrid>
     </>
   )
+}
+
+// roda no servidor
+export async function getServerSideProps(context) {
+  const userToken = await nookies.get(context).token;
+  //const cookies = nookies.get(context);
+  //const token = cookies.USER_TOKEN;
+
+  const { isAuthenticaded } = await fetch('https://alurakut.vercel.app/api/auth', {
+    headers: {
+      Authorization: userToken,
+    }
+  }).then((resposta) => resposta.json())
+
+  if (!isAuthenticaded) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
+
+  const { githubUser } = jwt.decode(userToken);
+  return {
+    props: {
+      githubUser: githubUser,
+    }, // will be passed to the page component as props
+  }
 }
